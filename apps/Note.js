@@ -255,6 +255,9 @@ export async function Note(e, {
 	var image = fs.readdirSync(img_path);
 	var list_img = [];
 	for (let val of image) {
+		if (val.indexOf(".") == 0){
+			continue;
+		}
 		list_img.push(val)
 	}
 	var imgs = list_img.length == 1 ? list_img[0] : list_img[lodash.random(0, list_img.length - 1)];

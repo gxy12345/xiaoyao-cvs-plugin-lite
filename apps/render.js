@@ -105,6 +105,7 @@ async function doRender(app, type, data, imgType, renderCfg) {
     if(imgType == "png"){
       randData.omitBackground=true;
     }
+
     base64 = await body.screenshot(randData);
     if (!global.debugView) {
       page.close().catch((err) => Bot.logger.error(err));
