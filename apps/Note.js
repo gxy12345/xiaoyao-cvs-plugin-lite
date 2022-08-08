@@ -24,11 +24,11 @@ import {
 } from "../../../lib/app/mysApi.js";
 
 const _path = process.cwd();
-let role_user = Data.readJSON(`${_path}/plugins/xiaoyao-cvs-plugin/resources/dailyNote/json/`, "dispatch_time");
+let role_user = Data.readJSON(`${_path}/plugins/xiaoyao-cvs-plugin-lite/resources/dailyNote/json/`, "dispatch_time");
 
 let path_url = ["dailyNote", "xiaoyao_Note"];
 let path_img = ["background_image", "/icon/bg"];
-let tempDataUrl = `${_path}/plugins/xiaoyao-cvs-plugin/data/NoteTemp`
+let tempDataUrl = `${_path}/plugins/xiaoyao-cvs-plugin-lite/data/NoteTemp`
 let tempData = {};
 init()
 
@@ -236,7 +236,7 @@ export async function Note(e, {
 	if (urlType.length > 0) {
 		urlType = urlType[lodash.random(0, urlType.length - 1)]
 	}
-	let img_path = `./plugins/xiaoyao-cvs-plugin/resources/dailyNote/${path_img[mb]}`;
+	let img_path = `./plugins/xiaoyao-cvs-plugin-lite/resources/dailyNote/${path_img[mb]}`;
 	if (tempData[e.user_id] && tempData[e.user_id].type > 0) {
 		mb = tempData[e.user_id].type;
 		urlType = tempData[e.user_id].temp;
@@ -250,7 +250,7 @@ export async function Note(e, {
 				mb2_icon: ""
 			})
 		}
-		img_path = `./plugins/xiaoyao-cvs-plugin/resources/dailyNote/Template/${urlType}${path_img[mb]}`;
+		img_path = `./plugins/xiaoyao-cvs-plugin-lite/resources/dailyNote/Template/${urlType}${path_img[mb]}`;
 	}
 	var image = fs.readdirSync(img_path);
 	var list_img = [];
@@ -346,7 +346,7 @@ export async function DailyNoteTask() {
 			redis.set(sendkey, "1", {
 				EX: sendCD
 			});
-			await Note(e, getPluginRender("xiaoyao-cvs-plugin"));
+			await Note(e, getPluginRender("xiaoyao-cvs-plugin-lite"));
 		}
 	}
 }
@@ -355,7 +355,7 @@ export async function pokeNote(e){
 	if (!Cfg.get("note.poke")) {
 		return false;
 	}
-	return await Note(e, getPluginRender("xiaoyao-cvs-plugin"),"poke");
+	return await Note(e, getPluginRender("xiaoyao-cvs-plugin-lite"),"poke");
 }
 
 
@@ -385,7 +385,7 @@ export async function Note_appoint(e) {
 }
 
 const note_file = function() {
-	var urlFile = fs.readdirSync(`./plugins/xiaoyao-cvs-plugin/resources/dailyNote/Template/`);
+	var urlFile = fs.readdirSync(`./plugins/xiaoyao-cvs-plugin-lite/resources/dailyNote/Template/`);
 	var urlType = [];
 	for (let val of urlFile) {
 		if (val.includes(".")) continue;

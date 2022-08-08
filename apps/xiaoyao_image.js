@@ -54,14 +54,14 @@ export async function roleInfo(e) {
 }
 
 const send_Msg = function(e, type, name) {
-	let path = `${_path}/plugins/xiaoyao-cvs-plugin/resources/xiaoyao-plus/${type}/${name}.png`
+	let path = `${_path}/plugins/xiaoyao-cvs-plugin-lite/resources/xiaoyao-plus/${type}/${name}.png`
 	if (fs.existsSync(path)) {
 		e.reply(segment.image(`file:///${path}`));
 		return true;
 	}
 	if (type == "all") {
 		for (let val of list) {
-			let new_name = info_img(e, Data.readJSON(`${_path}/plugins/xiaoyao-cvs-plugin/resources/Atlas_alias/`,
+			let new_name = info_img(e, Data.readJSON(`${_path}/plugins/xiaoyao-cvs-plugin-lite/resources/Atlas_alias/`,
 				val), name)
 			if (new_name) {
 				name = new_name
@@ -70,7 +70,7 @@ const send_Msg = function(e, type, name) {
 			}
 		}
 	}
-	path = `${_path}/plugins/xiaoyao-cvs-plugin/resources/xiaoyao-plus/${type}/${name}.png`
+	path = `${_path}/plugins/xiaoyao-cvs-plugin-lite/resources/xiaoyao-plus/${type}/${name}.png`
 	if (!fs.existsSync(path)) {
 		return false;
 	}
@@ -87,7 +87,7 @@ export async function init(isUpdate = false) {
 			weapon.set(val, i);
 		}
 	}
-	let paths = "./plugins/xiaoyao-cvs-plugin/resources/xiaoyao-plus/wuqi_tujian";
+	let paths = "./plugins/xiaoyao-cvs-plugin-lite/resources/xiaoyao-plus/wuqi_tujian";
 	if (!fs.existsSync(paths)) {
 		return true;
 	}
@@ -115,7 +115,7 @@ export async function weaponInfo(e) {
 	return false;
 }
 export async function Atlas_list(e) {
-	let list = Data.readJSON(`${_path}/plugins/xiaoyao-cvs-plugin/resources/Atlas_alias/`, "Atlas_list");
+	let list = Data.readJSON(`${_path}/plugins/xiaoyao-cvs-plugin-lite/resources/Atlas_alias/`, "Atlas_list");
 	let name = e.msg.replace(/#|井/g, "")
 	for (let i in list) {
 		var title = i.split("|");

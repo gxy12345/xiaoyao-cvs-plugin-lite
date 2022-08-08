@@ -35,16 +35,16 @@ let shoting = [];
  */
 async function render1(app = "", type = "", data = {}, imgType = "jpeg") {
   if (lodash.isUndefined(data._res_path)) {
-    data._res_path = `../../../../../plugins/xiaoyao-cvs-plugin/resources/`;
+    data._res_path = `../../../../../plugins/xiaoyao-cvs-plugin-lite/resources/`;
   }
   if (lodash.isUndefined(data._sys_res_path)) {
-    data._sys_res_path = `../../../../../plugins/xiaoyao-cvs-plugin/resources/`;
+    data._sys_res_path = `../../../../../plugins/xiaoyao-cvs-plugin-lite/resources/`;
   }
   let tplKey = `${app}.${type}`;
   let saveId = data.save_id || type;
-  let tplFile = `${_path}/plugins/xiaoyao-cvs-plugin/resources/${app}/${type}.html`;
-  Data.createDir(_path + `/data/`, `html/plugin_xiaoyao-cvs-plugin/${app}/${type}`);
-  let savePath = _path + `/data/html/plugin_xiaoyao-cvs-plugin/${app}/${type}/${saveId}.html`;
+  let tplFile = `${_path}/plugins/xiaoyao-cvs-plugin-lite/resources/${app}/${type}.html`;
+  Data.createDir(_path + `/data/`, `html/plugin_xiaoyao-cvs-plugin-lite/${app}/${type}`);
+  let savePath = _path + `/data/html/plugin_xiaoyao-cvs-plugin-lite/${app}/${type}/${saveId}.html`;
 
   return await doRender(app, type, data, imgType, {
     tplKey,

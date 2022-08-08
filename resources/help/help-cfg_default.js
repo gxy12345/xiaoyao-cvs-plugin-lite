@@ -6,7 +6,7 @@
 // 帮助配置
 export const helpCfg = {
   title: "图鉴帮助",  // 帮助标题
-  subTitle: "Yunzai-Bot & xiaoyao-cvs-Plugin" // 帮助副标题
+  subTitle: "Yunzai-Bot & xiaoyao-cvs-plugin-lite" // 帮助副标题
 };
 export const helpList = [{
 	"group": "信息查询",

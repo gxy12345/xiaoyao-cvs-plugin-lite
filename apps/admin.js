@@ -21,22 +21,22 @@ const require = createRequire(
 	import.meta.url);
 let cfgMap = {
 	"体力": "sys.Note",
-	"帮助": "sys.help",
-	"匹配": "sys.Atlas",
+	// "帮助": "sys.help",
+	// "匹配": "sys.Atlas",
 	"戳一戳":"note.poke",
 	"模板": "mb.len",
-	"目录":"Atlas.all",
+	// "目录":"Atlas.all",
 };
-let sysCfgReg = `^#图鉴设置\s*(${lodash.keys(cfgMap).join("|")})?\s*(.*)$`;
+let sysCfgReg = `^#便签设置\s*(${lodash.keys(cfgMap).join("|")})?\s*(.*)$`;
 export const rule = {
-	updateRes: {
-		hashMark: true,
-		reg: "^#图鉴(强制)?更新$",
-		describe: "【#管理】更新素材",
-	},
+	// updateRes: {
+	// 	hashMark: true,
+	// 	reg: "^#图鉴(强制)?更新$",
+	// 	describe: "【#管理】更新素材",
+	// },
 	updateMiaoPlugin: {
 		hashMark: true,
-		reg: "^#图鉴插件(强制)?更新",
+		reg: "^#便签插件(强制)?更新",
 		describe: "【#管理】图鉴更新",
 	},
 	sysCfg: {
@@ -48,7 +48,7 @@ export const rule = {
 
 
 const _path = process.cwd();
-const resPath = `${_path}/plugins/xiaoyao-cvs-plugin/resources/`;
+const resPath = `${_path}/plugins/xiaoyao-cvs-plugin-lite/resources/`;
 const plusPath = `${resPath}/xiaoyao-plus/`;
 
 export async function sysCfg(e, {
@@ -85,14 +85,14 @@ export async function sysCfg(e, {
 	// e.reply("设置成功！！");
 	// return true;
 	let cfg = {
-		help: getStatus("sys.help", false),
+		// help: getStatus("sys.help", false),
 		Note: getStatus("sys.Note",false),
-		Atlas: getStatus("sys.Atlas",false),
+		// Atlas: getStatus("sys.Atlas",false),
 		len:Cfg.get("mb.len", 0),
 		 poke: getStatus("note.poke",false),
-		imgPlus: fs.existsSync(plusPath),
+		// imgPlus: fs.existsSync(plusPath),
 		bg: await rodom(), //获取底图
-		Atlasall:getStatus("Atlas.all",false),
+		// Atlasall:getStatus("Atlas.all",false),
 	}
 	//渲染图像
 	return await Common.render("admin/index", {
@@ -105,7 +105,7 @@ export async function sysCfg(e, {
 }
 
 const rodom = async function() {
-	var image = fs.readdirSync(`./plugins/xiaoyao-cvs-plugin/resources/admin/imgs/bg`);
+	var image = fs.readdirSync(`./plugins/xiaoyao-cvs-plugin-lite/resources/admin/imgs/bg`);
 	var list_img = [];
 	for (let val of image) {
 		list_img.push(val)
@@ -199,21 +199,21 @@ export async function updateMiaoPlugin(e) {
 		e.reply("正在执行更新操作，请稍等");
 	}
 	exec(command, {
-		cwd: `${_path}/plugins/xiaoyao-cvs-plugin/`
+		cwd: `${_path}/plugins/xiaoyao-cvs-plugin-lite/`
 	}, function(error, stdout, stderr) {
 		//console.log(stdout);
 		if (/Already up[ -]to[ -]date/.test(stdout)||stdout.includes("最新")) {
-			e.reply("目前已经是最新版图鉴插件了~");
+			e.reply("目前已经是最新版便签插件了~");
 			return true;
 		}
 		if (error) {
-			e.reply("图鉴插件更新失败！\nError code: " + error.code + "\n" + error.stack + "\n 请稍后重试。");
+			e.reply("便签插件更新失败！\nError code: " + error.code + "\n" + error.stack + "\n 请稍后重试。");
 			return true;
 		}
-		e.reply("图鉴插件更新成功，尝试重新启动Yunzai以应用更新...");
+		e.reply("便签插件更新成功，尝试重新启动Yunzai以应用更新...");
 		timer && clearTimeout(timer);
-		redis.set("xiaoyao:restart-msg", JSON.stringify({
-			msg: "重启成功，新版图鉴插件已经生效",
+		redis.set("xiaoyao-lite:restart-msg", JSON.stringify({
+			msg: "重启成功，新版便签插件已经生效",
 			qq: e.user_id
 		}), {
 			EX: 30
@@ -225,7 +225,7 @@ export async function updateMiaoPlugin(e) {
 			}
 			exec(command, function(error, stdout, stderr) {
 				if (error) {
-					e.reply("自动重启失败，请手动重启以应用新版图鉴插件。\nError code: " + error.code + "\n" +
+					e.reply("自动重启失败，请手动重启以应用新版便签插件。\nError code: " + error.code + "\n" +
 						error.stack + "\n");
 					Bot.logger.error('重启失败\n${error.stack}');
 					return true;

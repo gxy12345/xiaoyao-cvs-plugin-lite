@@ -15,14 +15,14 @@
 
 <div class="info_box">
 	<div class="head-box type{{bgType}}">
-		<div class="label">#图鉴设置</div>
-		<div class="title">图鉴管理面板</div>
+		<div class="label">#便签设置</div>
+		<div class="title">便签管理面板</div>
 	</div>
 </div>
 <div class="cfg-box">
   <div class="cfg-group">游戏图鉴卡片展示</div>
   <ul class="cfg-ul">
-    <li class="cfg-li">
+    <!-- <li class="cfg-li">
       <div class="cfg-line">
         图鉴匹配查询
         <span class="cfg-hint"> #图鉴设置匹配 + 开启/关闭</span>
@@ -37,11 +37,11 @@
 	    {{@Atlasall}}
 	  </div>
 	  <div class="cfg-desc">图鉴目录 为兼容之前用js版本插件用户可以用指令关闭功能</div>
-	</li>
+	</li> -->
 	<li class="cfg-li">
 	  <div class="cfg-line">
 	    戳一戳卡片
-	    <span class="cfg-hint"> #图鉴设置戳一戳 + 开启/关闭</span>
+	    <span class="cfg-hint"> #便签设置戳一戳 + 开启/关闭</span>
 	    {{@poke}}
 	  </div>
 	</li>
@@ -71,7 +71,7 @@
 
   </ul>
 </div>
-<div class="cfg-box">
+<!-- <div class="cfg-box">
 	<div class="cfg-group">角色资料与信息查询</div>
 	<ul class="cfg-ul">
 		<li class="cfg-li">
@@ -87,7 +87,7 @@
 			<div class="cfg-desc">角色图片的扩展包，包含更多的角色图片</div>
 		</li>
 	</ul>
-</div>
+</div> -->
 <div class="cfg-box">
 	<div class="cfg-group">系统设置</div>
 	<ul class="cfg-ul">
@@ -100,18 +100,18 @@
       <div class="cfg-desc">可选值50~200，建议100。设置高精度会提高图片的精细度，但因图片较大可能会影响渲染与发送速度</div>
     </li> -->
 
-		<li class="cfg-li">
+		<!-- <li class="cfg-li">
 			<div class="cfg-line">
 				图鉴作为默认帮助
 				<span class="cfg-hint">#图鉴设置帮助 + 开启/关闭 </span>
 				{{@help}}
 			</div>
 			<div class="cfg-desc">开启后将使用图鉴版帮助作为Yunzai的默认帮助</div>
-		</li>
+		</li> -->
 		<li class="cfg-li">
 			<div class="cfg-line">
 				体力作为默认体力
-				<span class="cfg-hint">#图鉴设置体力 + 开启/关闭</span>
+				<span class="cfg-hint">#便签设置体力 + 开启/关闭</span>
 				{{@Note}}
 			</div>
 			<div class="cfg-desc">开启后将使用图鉴版体力作为Yunzai的默认体力</div>
@@ -119,7 +119,7 @@
 		<li class="cfg-li">
 			<div class="cfg-line">
 				设置体力模板类型
-				<span class="cfg-hint">#图鉴设置模板 + (0-2)</span>
+				<span class="cfg-hint">#便签设置模板 + (0-2)</span>
 				  <div class="cfg-status">{{@len}}</div>
 			</div>
 			<div class="cfg-desc">需开启图鉴版体力作为Yunzai的默认体力,当前模板支持0(随机)以及1-2</div>
