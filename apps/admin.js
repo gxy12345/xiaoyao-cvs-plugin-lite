@@ -37,7 +37,7 @@ export const rule = {
 	updateMiaoPlugin: {
 		hashMark: true,
 		reg: "^#便签插件(强制)?更新",
-		describe: "【#管理】图鉴更新",
+		describe: "【#管理】便签更新",
 	},
 	sysCfg: {
 		hashMark: true,

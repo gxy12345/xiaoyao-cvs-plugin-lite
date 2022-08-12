@@ -1,3 +1,26 @@
+#### lite版注意事项
+
+本插件为提取了xiaoyao-cvs-plugin的便签功能的简化版，旨在支持国际服的使用，并会覆盖一些原版插件的功能。
+非国际服请移步原版xiaoyao-cvs-plugin
+
+安装方法
+```
+git clone https://github.com/gxy12345/xiaoyao-cvs-plugin-lite.git ./plugins/xiaoyao-cvs-plugin-lite/
+```
+
+命令说明
+
+1. 发送 #便签设置 打开设置菜单
+2. 发送 #便签 #便笺，显示便签
+3. 发送 #便签插件（强制）更新获取最新代码
+5. 树脂背景图文件在 /xiaoyao-cvs-plugin-lite/resources/dailyNote/ 目录下
+
+
+
+
+
+以下为原版xiaoyao-cvs-plugin插件说明
+
 #### 介绍
 # xiaoyao-cvs-plugin
 
