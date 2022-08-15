@@ -3,6 +3,8 @@ import {
 } from "oicq";
 import fs from "fs";
 import lodash from "lodash";
+import Data from "../components/Data.js"
+import { copyFolder, deleteFiles } from "../components/Data.js";
 import {
 	createRequire
 } from "module";
@@ -43,6 +45,21 @@ export const rule = {
 		hashMark: true,
 		reg: sysCfgReg,
 		describe: "【#管理】系统设置"
+	},
+	updateNoteRes: {
+		hashMark: true,
+		reg: "#便签背景图(强制)?更新",
+		describe: "【#管理】下载背景图资源"
+	},
+	setNoteRes: {
+		hashMark: true,
+		reg: "#导入便签背景图[1234]",
+		describe: "【#管理】使用下载的背景图资源"
+	},
+	clearNoteRes: {
+		hashMark: true,
+		reg: "#清空便签背景图",
+		describe: "【#管理】清空背景图"
 	}
 };
 
@@ -182,6 +199,132 @@ export async function updateRes(e) {
 		});
 	}
 	return true;
+}
+
+export async function updateNoteRes(e) {
+	if (!await checkAuth(e)) {
+		return true;
+	}
+	let command = "";
+	if (fs.existsSync(`${resPath}/BJT/`)) {
+		e.reply("开始尝试更新，请耐心等待~");
+		command = `git pull`;
+		let isForce = e.msg.includes("强制");
+		if (isForce) {
+			command = "git  checkout . && git  pull";
+			// command="git fetch --all && git reset --hard origin/master && git pull "
+			e.reply("正在执行强制更新操作，请稍等");
+		} else {
+			e.reply("正在执行更新操作，请稍等");
+		}
+		exec(command, {
+			cwd: `${resPath}/BJT/`
+		}, function(error, stdout, stderr) {
+			//console.log(stdout);
+			if (/Already up to date/.test(stdout)||stdout.includes("最新")) {
+				e.reply("目前所有图片都已经是最新了~");
+				return true;
+			}
+			let numRet = /(\d*) files changed,/.exec(stdout);
+			if (numRet && numRet[1]) {
+				init()
+				e.reply(`报告主人，更新成功，此次更新了${numRet[1]}个文件~`);
+				return true;
+			}
+			if (error) {
+				e.reply("更新失败！\nError code: " + error.code + "\n" + error.stack + "\n 请稍后重试。");
+			} else {
+				// init()
+				e.reply("背景图资源更新成功~");
+			}
+		});
+	} else {
+		//gitee图床
+		command = `git clone https://github.com/cv-hunag/BJT.git "${resPath}/BJT/"`
+		// command = `git clone https://github.com/ctrlcvs/xiaoyao_plus.git "${resPath}/xiaoyao-plus/"`;\n此链接为github图床,如异常请请求多次
+		e.reply("开始尝试安装背景图资源，可能会需要一段时间，请耐心等待~");
+		exec(command, function(error, stdout, stderr) {
+			if (error) {
+				e.reply("背景图资源安装失败！\nError code: " + error.code + "\n" + error.stack + "\n 请稍后重试。");
+			} else {
+				// init()
+				e.reply("背景图资源安装成功！可以使用 #导入便签背景图(1234) 来导入背景图\n您后续也可以通过 #便签背景图更新 命令来更新图像");
+			}
+		});
+	}
+	return true;
+}
+
+export async function setNoteRes(e) {
+
+	if (!await checkAuth(e)) {
+		return true;
+	}
+
+	if (!fs.existsSync(`${resPath}/BJT/`)) {
+		e.reply("未找到背景图资源,请先使用 #便签背景图更新 命令获取背景图")
+		return true
+	}
+
+	let templateIndex = 1;
+	let templateSource = `${resPath}BJT/xiaoyao-cvs-plugin2/resources/dailyNote/`;
+	let templateDest = `${resPath}dailyNote/`;
+	if (e.msg.indexOf("2") != -1) {
+		templateIndex = 2; //模板类型2
+		templateSource = `${resPath}BJT/xiaoyao-cvs-plugin3/resources/dailyNote/`;
+	}
+	if (e.msg.indexOf("3") != -1) {
+		templateIndex = 3; //模板类型3
+		templateSource = `${resPath}BJT/xiaoyao-cvs-plugin4/resources/dailyNote/`;
+	}
+	if (e.msg.indexOf("4") != -1) {
+		templateIndex = 4; //模板类型2
+		templateSource = `${resPath}BJT/xiaoyao-cvs-plugin5/resources/dailyNote/`;
+	}
+	Bot.logger.mark(`选择背景图路径: ${templateSource}`);
+	Bot.logger.mark(`替换背景图路径: ${templateDest}`);
+
+	copyFolder(templateSource, templateDest, true)
+	e.reply("导入背景图完成");
+	return true;
+}
+
+export async function clearNoteRes(e) {
+	if (!await checkAuth(e)) {
+		return true;
+	}
+	e.reply("开始清空模板目录");
+	deleteFiles(`${resPath}/dailyNote/background_image`)
+	deleteFiles(`${resPath}/dailyNote/Template`)
+	//恢复工程自带模板
+
+	let currentCommitId;
+	let command = "git rev-parse HEAD"
+	exec(command, {
+		cwd: `${_path}/plugins/xiaoyao-cvs-plugin-lite/`
+	}, function(error, stdout, stderr) {
+		Bot.logger.mark(`最新commit-id: ${stdout.replace("\n", "")}`);
+
+		currentCommitId = stdout.replace("\n", "")
+		if (error) {
+			e.reply("获取git提交失败！\nError code: " + error.code + "\n" + error.stack + "\n 请稍后重试。");
+			return true;
+		}
+
+		command = `git checkout ${currentCommitId} resources/dailyNote`
+		exec(command, {
+			cwd: `${_path}/plugins/xiaoyao-cvs-plugin-lite/`
+		}, function(error, stdout, stderr) {
+			if (error) {
+				e.reply("恢复默认模板失败！\nError code: " + error.code + "\n" + error.stack + "\n 请稍后重试。");
+				return true;
+			} else {
+				e.reply("清空模板目录完成");
+				return true;
+			}
+		});
+	});
+
 }
 
 let timer;
