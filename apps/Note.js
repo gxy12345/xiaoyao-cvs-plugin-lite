@@ -363,7 +363,7 @@ export async function pokeNote(e){
 
 
 export async function Note_appoint(e) {
-	let msg = e.msg.replace(/#|井|体力|模板|设置/g, "");
+	let msg = e.msg.replace(/#|井|便签|体力|模板|设置/g, "");
 	let All = ["默认", "随机", "0"];
 	let urlType = note_file();
 	let type = 0;
