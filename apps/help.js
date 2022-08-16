@@ -15,6 +15,7 @@ const _path = process.cwd();
 
 const helpPath = `${_path}/plugins/xiaoyao-cvs-plugin-lite/resources/help`;
 const path_ = `/plugins/xiaoyao-cvs-plugin-lite/resources/common/layout/`;
+
 export async function help(e, {
 	render
 }) {

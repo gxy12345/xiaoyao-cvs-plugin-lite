@@ -1,5 +1,6 @@
 import lodash from "lodash";
 import fs from "fs";
+import path from "path"
 import request from "request";
 
 let Data = {
@@ -171,9 +172,109 @@ let Data = {
 
   sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
-  }
+  },
+
+  // copyFolder(copiedPath, resultPath, direct) {
+  //   if(!direct) {
+  //     copiedPath = path.join(__dirname, copiedPath)
+  //     resultPath = path.join(__dirname, resultPath)
+  //   }
+
+  //   function createDir (dirPath) {
+  //     if (!fs.existsSync(dirPath)){
+  //       fs.mkdirSync(dirPath);
+  //     }
+  //   }
+
+  //   if (fs.existsSync(copiedPath)) {
+  //     createDir(resultPath)
+  //     const files = fs.readdirSync(copiedPath, { withFileTypes: true });
+  //     for (let i = 0; i < files.length; i++) {
+  //       const cf = files[i]
+  //       const ccp = path.join(copiedPath, cf.name)
+  //       const crp = path.join(resultPath, cf.name)  
+  //       if (cf.isFile()) {
+  //         const readStream = fs.createReadStream(ccp)
+  //         const writeStream = fs.createWriteStream(crp)
+  //         readStream.pipe(writeStream)
+  //       } else {
+  //         try {
+  //           fs.accessSync(path.join(crp, '..'), fs.constants.W_OK)
+  //           copyFolder(ccp, crp, true)
+  //         } catch (error) {
+  //           Bot.logger.error(`复制失败\n${error.stack}`);
+  //         }
+  //       }
+  //     }
+  //   } else {
+  //       // console.log('do not exist path: ', copiedPath);
+  //   }
+  // },
+
+  // deleteFiles(folderPath) {
+  //   let forlder_exists = fs.existsSync(folderPath);
+  //   if (forlder_exists) {
+  //     let fileList = fs.readdirSync(folderPath);
+  //     fileList.forEach(function (fileName) {
+  //     fs.unlinkSync(path.join(folderPath, fileName));
+  //     });
+  //   }
+  // }
 
 
 }
 
 export default Data;
+
+export function copyFolder(copiedPath, resultPath, direct) {
+  if(!direct) {
+    copiedPath = path.join(__dirname, copiedPath)
+    resultPath = path.join(__dirname, resultPath)
+  }
+
+  function createDir (dirPath) {
+    if (!fs.existsSync(dirPath)){
+      fs.mkdirSync(dirPath);
+    }
+  }
+
+  if (fs.existsSync(copiedPath)) {
+    createDir(resultPath)
+    const files = fs.readdirSync(copiedPath, { withFileTypes: true });
+    for (let i = 0; i < files.length; i++) {
+      const cf = files[i]
+      const ccp = path.join(copiedPath, cf.name)
+      const crp = path.join(resultPath, cf.name)  
+      if (cf.isFile()) {
+        const readStream = fs.createReadStream(ccp)
+        const writeStream = fs.createWriteStream(crp)
+        readStream.pipe(writeStream)
+      } else {
+        try {
+          fs.accessSync(path.join(crp, '..'), fs.constants.W_OK)
+          copyFolder(ccp, crp, true)
+        } catch (error) {
+          Bot.logger.error(`复制失败\n${error.stack}`);
+        }
+      }
+    }
+  } else {
+      // console.log('do not exist path: ', copiedPath);
+  }
+};
+
+export function deleteFiles(path) {
+  var files = [];
+  if(fs.existsSync(path)) {
+    files = fs.readdirSync(path);
+    files.forEach(function(file, index) {
+      var curPath = path + "/" + file;
+      if(fs.statSync(curPath).isDirectory()) {
+        deleteFiles(curPath);
+      } else {
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+  }
+};

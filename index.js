@@ -16,7 +16,10 @@ import {
 	rule as adminRule,
 	updateRes,
 	sysCfg,
-	updateMiaoPlugin
+	updateMiaoPlugin,
+	updateNoteRes,
+	setNoteRes,
+	clearNoteRes
 } from "./apps/admin.js";
 import {
 	currentVersion
@@ -29,7 +32,10 @@ export {
 	sysCfg,
 	help,DailyNoteTask,
 	AtlasAlias,
-	Note
+	Note,
+	updateNoteRes,
+	setNoteRes,
+	clearNoteRes
 };
 
 let rule = {
@@ -38,8 +44,12 @@ let rule = {
 		describe: "体力",
 	},
 	Note_appoint: {
-		reg: "^#体力模板(设置(.*)|列表)$",
+		reg: "^#(体力|便笺|便签)模板(设置(.*)|列表)$",
 		describe: "体力模板设置",
+	},
+	help: {
+		reg: "^#?(便签)?(命令|帮助|菜单|help|说明|功能|指令|使用说明)$",
+		describe: "查看插件的功能",
 	},
 	pokeNote: {
 		reg: "#poke#",
