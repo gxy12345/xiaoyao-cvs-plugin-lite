@@ -1,8 +1,6 @@
 /*
 * 请勿直接修改此文件，可能会导致后续更新冲突
 * 如需自定义可将文件复制一份，重命名为 help-cfg.js 后编辑
-* 以下地址为映射路径
-* xiaoyao-cvs-plugin-lite/resources/help/help-cfg_default.js
 * */
 
 // 帮助配置
