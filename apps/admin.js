@@ -53,7 +53,7 @@ export const rule = {
 	},
 	setNoteRes: {
 		hashMark: true,
-		reg: "#导入便签背景图[1234]",
+		reg: "#导入便签背景图[12345]",
 		describe: "【#管理】使用下载的背景图资源"
 	},
 	clearNoteRes: {
@@ -206,8 +206,11 @@ export async function updateNoteRes(e) {
 		return true;
 	}
 	let command = "";
-	if (fs.existsSync(`${resPath}/BJT/`)) {
-		e.reply("开始尝试更新，请耐心等待~");
+	let resBJTStatus = fs.existsSync(`${resPath}/BJT/`);
+	let resBJT2Status = fs.existsSync(`${resPath}/BJT-Template/`);
+	bot.logger.mark(`资源状态: 背景库1:${resBJTStatus}, 背景库2:${resBJT2Status}`);
+
+	if (resBJTStatus && resBJT2Status) {
 		command = `git pull`;
 		let isForce = e.msg.includes("强制");
 		if (isForce) {
@@ -222,35 +225,74 @@ export async function updateNoteRes(e) {
 		}, function(error, stdout, stderr) {
 			//console.log(stdout);
 			if (/Already up to date/.test(stdout)||stdout.includes("最新")) {
-				e.reply("目前所有图片都已经是最新了~");
+				e.reply("【背景图库1】目前所有图片都已经是最新了~");
 				return true;
 			}
 			let numRet = /(\d*) files changed,/.exec(stdout);
 			if (numRet && numRet[1]) {
 				init()
-				e.reply(`报告主人，更新成功，此次更新了${numRet[1]}个文件~`);
+				e.reply(`【背景图库1】报告主人，更新成功，此次更新了${numRet[1]}个文件~`);
 				return true;
 			}
 			if (error) {
-				e.reply("更新失败！\nError code: " + error.code + "\n" + error.stack + "\n 请稍后重试。");
+				e.reply("【背景图库1】更新失败！\nError code: " + error.code + "\n" + error.stack + "\n 请稍后重试。");
 			} else {
 				// init()
-				e.reply("背景图资源更新成功~");
+				e.reply("【背景图库1】背景图资源更新成功~");
+			}
+		});
+		exec(command, {
+			cwd: `${resPath}/BJT-Template/`
+		}, function(error, stdout, stderr) {
+			//console.log(stdout);
+			if (/Already up to date/.test(stdout)||stdout.includes("最新")) {
+				e.reply("【背景图库2】目前所有图片都已经是最新了~");
+				return true;
+			}
+			let numRet = /(\d*) files changed,/.exec(stdout);
+			if (numRet && numRet[1]) {
+				init()
+				e.reply(`【背景图库2】报告主人，更新成功，此次更新了${numRet[1]}个文件~`);
+				return true;
+			}
+			if (error) {
+				e.reply("【背景图库2】背景图资源库2更新失败！\nError code: " + error.code + "\n" + error.stack + "\n 请稍后重试。");
+			} else {
+				// init()
+				e.reply("【背景图库2】背景图资源更新成功~");
 			}
 		});
 	} else {
-		//gitee图床
-		command = `git clone https://github.com/cv-hunag/BJT.git "${resPath}/BJT/"`
-		// command = `git clone https://github.com/ctrlcvs/xiaoyao_plus.git "${resPath}/xiaoyao-plus/"`;\n此链接为github图床,如异常请请求多次
+		let BJTDownloadStatus1 = true;
+		let BJTDownloadStatus2 = true;
 		e.reply("开始尝试安装背景图资源，可能会需要一段时间，请耐心等待~");
-		exec(command, function(error, stdout, stderr) {
-			if (error) {
-				e.reply("背景图资源安装失败！\nError code: " + error.code + "\n" + error.stack + "\n 请稍后重试。");
-			} else {
-				// init()
-				e.reply("背景图资源安装成功！可以使用 #导入便签背景图(1234) 来导入背景图\n您后续也可以通过 #便签背景图更新 命令来更新图像");
-			}
-		});
+		if (!resBJTStatus){
+			BJTDownloadStatus1 = false;
+			command = `git clone https://github.com/cv-hunag/BJT.git "${resPath}/BJT/"`
+			exec(command, function(error, stdout, stderr) {
+				if (error) {
+					e.reply("【背景图库1】安装失败！\nError code: " + error.code + "\n" + error.stack + "\n 请稍后重试。");
+				} else {
+					// init()
+					Bot.logger.mark("背景图库1 安装完成");
+					BJTDownloadStatus1 = true;
+				}
+			});
+		}
+		if (!resBJT2Status){
+			BJTDownloadStatus2 = false;
+			command = `git clone https://github.com/SmallK111407/BJT-Template.git "${resPath}/BJT-Template/"`
+			exec(command, function(error, stdout, stderr) {
+				if (error) {
+					e.reply("【背景图库2】安装失败！\nError code: " + error.code + "\n" + error.stack + "\n 请稍后重试。");
+				} else {
+					// init()
+					Bot.logger.mark("背景图库2 安装完成");
+					BJTDownloadStatus2 = true;
+				}
+			});
+		}
+		e.reply(`背景图资源安装成功！可以使用 #导入便签背景图(12345) 来导入背景图\n您后续也可以通过 #便签背景图更新 命令来更新图像`);
 	}
 	return true;
 }
@@ -261,7 +303,10 @@ export async function setNoteRes(e) {
 		return true;
 	}
 
-	if (!fs.existsSync(`${resPath}/BJT/`)) {
+	let resBJTStatus = fs.existsSync(`${resPath}/BJT/`);
+	let resBJT2Status = fs.existsSync(`${resPath}/BJT-Template/`);
+
+	if (!(resBJTStatus || resBJT2Status)) {
 		e.reply("未找到背景图资源,请先使用 #便签背景图更新 命令获取背景图")
 		return true
 	}
@@ -269,7 +314,13 @@ export async function setNoteRes(e) {
 	let templateIndex = 1;
 	let templateSource = `${resPath}BJT/xiaoyao-cvs-plugin2/resources/dailyNote/`;
 	let templateDest = `${resPath}dailyNote/`;
+	let templateIndexRes1 = [1,2,3,4];
+	let templateIndexRes2 = [5];
+
 	if (e.msg.indexOf("2") != -1) {
+		if (!resBJTStatus) {
+			e.reply("未找到对应的背景图资源包，请使用 #便签背景图更新 命令获取背景图");
+		}
 		templateIndex = 2; //模板类型2
 		templateSource = `${resPath}BJT/xiaoyao-cvs-plugin3/resources/dailyNote/`;
 	}
@@ -280,6 +331,18 @@ export async function setNoteRes(e) {
 	if (e.msg.indexOf("4") != -1) {
 		templateIndex = 4; //模板类型2
 		templateSource = `${resPath}BJT/xiaoyao-cvs-plugin5/resources/dailyNote/`;
+	}
+	if (e.msg.indexOf("5") != -1) {
+		templateIndex = 5; //模板类型2
+		templateSource = `${resPath}BJT-Template/`;
+	}
+	if (!resBJTStatus && templateIndexRes1.includes(templateIndex)) {
+		e.reply("未找到对应的背景图资源包，请使用 #便签背景图更新 命令获取背景图");
+		return true;
+	}
+	if (!resBJT2Status && templateIndexRes2.includes(templateIndex)) {
+		e.reply("未找到对应的背景图资源包，请使用 #便签背景图更新 命令获取背景图");
+		return true;
 	}
 	Bot.logger.mark(`选择背景图路径: ${templateSource}`);
 	Bot.logger.mark(`替换背景图路径: ${templateDest}`);
