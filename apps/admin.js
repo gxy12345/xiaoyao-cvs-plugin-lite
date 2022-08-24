@@ -53,7 +53,7 @@ export const rule = {
 	},
 	setNoteRes: {
 		hashMark: true,
-		reg: "#导入便签背景图[12345]",
+		reg: "#导入便签背景图[123456]",
 		describe: "【#管理】使用下载的背景图资源"
 	},
 	clearNoteRes: {
@@ -208,7 +208,7 @@ export async function updateNoteRes(e) {
 	let command = "";
 	let resBJTStatus = fs.existsSync(`${resPath}/BJT/`);
 	let resBJT2Status = fs.existsSync(`${resPath}/BJT-Template/`);
-	bot.logger.mark(`资源状态: 背景库1:${resBJTStatus}, 背景库2:${resBJT2Status}`);
+	Bot.logger.mark(`资源状态: 背景库1:${resBJTStatus}, 背景库2:${resBJT2Status}`);
 
 	if (resBJTStatus && resBJT2Status) {
 		command = `git pull`;
@@ -292,7 +292,7 @@ export async function updateNoteRes(e) {
 				}
 			});
 		}
-		e.reply(`背景图资源安装成功！可以使用 #导入便签背景图(12345) 来导入背景图\n您后续也可以通过 #便签背景图更新 命令来更新图像`);
+		e.reply(`背景图资源安装成功！可以使用 #导入便签背景图(123456) 来导入背景图\n您后续也可以通过 #便签背景图更新 命令来更新图像`);
 	}
 	return true;
 }
@@ -315,26 +315,32 @@ export async function setNoteRes(e) {
 	let templateSource = `${resPath}BJT/xiaoyao-cvs-plugin2/resources/dailyNote/`;
 	let templateDest = `${resPath}dailyNote/`;
 	let templateIndexRes1 = [1,2,3,4];
-	let templateIndexRes2 = [5];
+	let templateIndexRes2 = [5,6];
 
 	if (e.msg.indexOf("2") != -1) {
-		if (!resBJTStatus) {
-			e.reply("未找到对应的背景图资源包，请使用 #便签背景图更新 命令获取背景图");
-		}
 		templateIndex = 2; //模板类型2
 		templateSource = `${resPath}BJT/xiaoyao-cvs-plugin3/resources/dailyNote/`;
+		templateDest = `${resPath}dailyNote/`;
 	}
 	if (e.msg.indexOf("3") != -1) {
 		templateIndex = 3; //模板类型3
 		templateSource = `${resPath}BJT/xiaoyao-cvs-plugin4/resources/dailyNote/`;
+		templateDest = `${resPath}dailyNote/`;
 	}
 	if (e.msg.indexOf("4") != -1) {
-		templateIndex = 4; //模板类型2
+		templateIndex = 4; //模板类型4
 		templateSource = `${resPath}BJT/xiaoyao-cvs-plugin5/resources/dailyNote/`;
+		templateDest = `${resPath}dailyNote/`;
 	}
 	if (e.msg.indexOf("5") != -1) {
-		templateIndex = 5; //模板类型2
-		templateSource = `${resPath}BJT-Template/`;
+		templateIndex = 5; //模板类型5
+		templateSource = `${resPath}BJT-Template/Template/`;
+		templateDest = `${resPath}dailyNote/Template`;
+	}
+	if (e.msg.indexOf("6") != -1) {
+		templateIndex = 6; //模板类型6
+		templateSource = `${resPath}BJT-Template/Template/`;
+		templateDest = `${resPath}dailyNote/Template`;
 	}
 	if (!resBJTStatus && templateIndexRes1.includes(templateIndex)) {
 		e.reply("未找到对应的背景图资源包，请使用 #便签背景图更新 命令获取背景图");
