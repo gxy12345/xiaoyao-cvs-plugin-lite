@@ -339,7 +339,7 @@ export async function setNoteRes(e) {
 	}
 	if (e.msg.indexOf("6") != -1) {
 		templateIndex = 6; //模板类型6
-		templateSource = `${resPath}BJT-Template/Template/`;
+		templateSource = `${resPath}BJT-Template/Template2/`;
 		templateDest = `${resPath}dailyNote/Template`;
 	}
 	if (!resBJTStatus && templateIndexRes1.includes(templateIndex)) {
