@@ -1,7 +1,7 @@
 import lodash from "lodash";
 import fs from "fs";
 import path from "path"
-import request from "request";
+const _path = process.cwd()
 
 let Data = {
 
@@ -52,7 +52,18 @@ let Data = {
     Data.createDir(path, true);
     return fs.writeFileSync(`${path}/${file}`, JSON.stringify(data, null, space));
   },
-
+  async importModule (path, file, rootPath = _path) {
+    if (!/\.js$/.test(file)) {
+      file = file + '.js'
+    }
+    // 检查并创建目录
+    Data.createDir(_path, path, true)
+    if (fs.existsSync(`${_path}/${path}/${file}`)) {
+      let data = await import(`file://${_path}/${path}/${file}`)
+      return data || {}
+    }
+    return {}
+  },
   /*
   * 返回一个从 target 中选中的属性的对象
   *
@@ -147,81 +158,11 @@ let Data = {
     return Promise.all(ret);
   },
 
-  async cacheFile(fileList, cacheRoot) {
-
-    let ret = {};
-    let cacheFn = async function (url) {
-      let path = Data.getUrlPath(url);
-      if (fs.existsSync(`${cacheRoot}/${path.path}/${path.filename}`)) {
-        console.log("已存在，跳过 " + path.path + "/" + path.filename);
-        ret[url] = `${path.path}/${path.filename}`;
-        return true;
-      }
-
-      Data.pathExists(cacheRoot, path.path);
-      await request(url).pipe(fs.createWriteStream(`${cacheRoot}/${path.path}/` + path.filename));
-      console.log("下载成功: " + path.path + "/" + path.filname);
-      ret[url] = `${path.path}/${path.filename}`;
-      return true;
-    };
-
-    await Data.asyncPool(10, fileList, cacheFn);
-    return ret;
-
-  },
-
   sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
-  },
+  }
 
-  // copyFolder(copiedPath, resultPath, direct) {
-  //   if(!direct) {
-  //     copiedPath = path.join(__dirname, copiedPath)
-  //     resultPath = path.join(__dirname, resultPath)
-  //   }
-
-  //   function createDir (dirPath) {
-  //     if (!fs.existsSync(dirPath)){
-  //       fs.mkdirSync(dirPath);
-  //     }
-  //   }
-
-  //   if (fs.existsSync(copiedPath)) {
-  //     createDir(resultPath)
-  //     const files = fs.readdirSync(copiedPath, { withFileTypes: true });
-  //     for (let i = 0; i < files.length; i++) {
-  //       const cf = files[i]
-  //       const ccp = path.join(copiedPath, cf.name)
-  //       const crp = path.join(resultPath, cf.name)  
-  //       if (cf.isFile()) {
-  //         const readStream = fs.createReadStream(ccp)
-  //         const writeStream = fs.createWriteStream(crp)
-  //         readStream.pipe(writeStream)
-  //       } else {
-  //         try {
-  //           fs.accessSync(path.join(crp, '..'), fs.constants.W_OK)
-  //           copyFolder(ccp, crp, true)
-  //         } catch (error) {
-  //           Bot.logger.error(`复制失败\n${error.stack}`);
-  //         }
-  //       }
-  //     }
-  //   } else {
-  //       // console.log('do not exist path: ', copiedPath);
-  //   }
-  // },
-
-  // deleteFiles(folderPath) {
-  //   let forlder_exists = fs.existsSync(folderPath);
-  //   if (forlder_exists) {
-  //     let fileList = fs.readdirSync(folderPath);
-  //     fileList.forEach(function (fileName) {
-  //     fs.unlinkSync(path.join(folderPath, fileName));
-  //     });
-  //   }
-  // }
-
-
+ 
 }
 
 export default Data;

@@ -15,9 +15,6 @@ import {
 	Cfg
 } from "../components/index.js";
 import Common from "../components/Common.js";
-import {
-	init
-} from "../apps/xiaoyao_image.js"
 
 const require = createRequire(
 	import.meta.url);
@@ -173,14 +170,12 @@ export async function updateRes(e) {
 			}
 			let numRet = /(\d*) files changed,/.exec(stdout);
 			if (numRet && numRet[1]) {
-				init()
 				e.reply(`报告主人，更新成功，此次更新了${numRet[1]}个图片~`);
 				return true;
 			}
 			if (error) {
 				e.reply("更新失败！\nError code: " + error.code + "\n" + error.stack + "\n 请稍后重试。");
 			} else {
-				init()
 				e.reply("图片加量包更新成功~");
 			}
 		});
@@ -193,7 +188,6 @@ export async function updateRes(e) {
 			if (error) {
 				e.reply("角色图片加量包安装失败！\nError code: " + error.code + "\n" + error.stack + "\n 请稍后重试。");
 			} else {
-				init()
 				e.reply("角色图片加量包安装成功！您后续也可以通过 #图鉴更新 命令来更新图像");
 			}
 		});
@@ -230,14 +224,12 @@ export async function updateNoteRes(e) {
 			}
 			let numRet = /(\d*) files changed,/.exec(stdout);
 			if (numRet && numRet[1]) {
-				init()
 				e.reply(`【背景图库1】报告主人，更新成功，此次更新了${numRet[1]}个文件~`);
 				return true;
 			}
 			if (error) {
 				e.reply("【背景图库1】更新失败！\nError code: " + error.code + "\n" + error.stack + "\n 请稍后重试。");
 			} else {
-				// init()
 				e.reply("【背景图库1】背景图资源更新成功~");
 			}
 		});
@@ -251,14 +243,12 @@ export async function updateNoteRes(e) {
 			}
 			let numRet = /(\d*) files changed,/.exec(stdout);
 			if (numRet && numRet[1]) {
-				init()
 				e.reply(`【背景图库2】报告主人，更新成功，此次更新了${numRet[1]}个文件~`);
 				return true;
 			}
 			if (error) {
 				e.reply("【背景图库2】背景图资源库2更新失败！\nError code: " + error.code + "\n" + error.stack + "\n 请稍后重试。");
 			} else {
-				// init()
 				e.reply("【背景图库2】背景图资源更新成功~");
 			}
 		});
@@ -273,9 +263,9 @@ export async function updateNoteRes(e) {
 				if (error) {
 					e.reply("【背景图库1】安装失败！\nError code: " + error.code + "\n" + error.stack + "\n 请稍后重试。");
 				} else {
-					// init()
 					Bot.logger.mark("背景图库1 安装完成");
 					BJTDownloadStatus1 = true;
+					e.reply(`背景图资源1安装成功！可以使用 #导入便签背景图(1234) 来导入背景图\n您后续也可以通过 #便签背景图更新 命令来更新图像`);
 				}
 			});
 		}
@@ -286,13 +276,12 @@ export async function updateNoteRes(e) {
 				if (error) {
 					e.reply("【背景图库2】安装失败！\nError code: " + error.code + "\n" + error.stack + "\n 请稍后重试。");
 				} else {
-					// init()
 					Bot.logger.mark("背景图库2 安装完成");
 					BJTDownloadStatus2 = true;
+					e.reply(`背景图资源1安装成功！可以使用 #导入便签背景图(56) 来导入背景图\n您后续也可以通过 #便签背景图更新 命令来更新图像`);
 				}
 			});
 		}
-		e.reply(`背景图资源安装成功！可以使用 #导入便签背景图(123456) 来导入背景图\n您后续也可以通过 #便签背景图更新 命令来更新图像`);
 	}
 	return true;
 }
